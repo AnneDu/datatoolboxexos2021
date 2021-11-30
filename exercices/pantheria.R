@@ -6,6 +6,8 @@
 # script pour l'exo ggplot2
 #
 ################################
+#Load tidyverse
+library(tidyverse)
 
 #Load pantheria data
 pantheria <- readr::read_delim("data/pantheria-traits/pantheria.txt", delim = "\t")
@@ -58,3 +60,35 @@ pantheria %>%
   group_by(family) %>%
   dplyr::summarise(mean=mean(homerange), sd=sd(homerange), n=n())
 
+#plot 1
+pantheria %>%
+  group_by(family) %>% # group by family
+  mutate(n = n()) %>% # calculate number of entries per family
+  filter(n > 100) %>% # select only the families with more than 100 entries
+  ggplot() +
+  aes(x = fct_reorder(family, n), y = n) + # order bars
+  geom_col() +
+  coord_flip() + # flip the bar chart
+  xlab("Family") + # add label for X axis
+  ylab("Counts") + # add label for Y axis
+  ggtitle("Number of entries per family") # add title
+
+#plot 2
+theme_set(theme_bw()) # play around with theme
+pantheria %>%
+  filter(!is.na(litter_size), !is.na(longevity)) %>%
+  group_by(family) %>% # group by family
+  mutate(n = n()) %>% # count the number of entries per family
+  mutate(longevity = longevity / 12) %>% # Change month to year
+  filter(n > 10) %>% # select only those families with more than 50 entries
+  ggplot() +
+  aes(x = longevity, y = litter_size, col = family) + # scatter plot
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + # se = TRUE to add confidence intervals
+  xlab("Longevity") + # add label for X axis
+  ylab("Litter size") + # add label for Y axis
+  ggtitle("Scatterplot") + # add title
+  facet_wrap(~ family, nrow = 3) # split in several panels,
+# one for each family
+# remove scale = 'free' for
+# same scale for all plots
