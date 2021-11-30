@@ -16,4 +16,7 @@ devtools::install_deps()
 source(here::here("R", "data_wildfinder.R"))
 
 #run exo_dyplr
-source(here::here("exercices","exo_dplyr.R"))
+#source(here::here("exercices","exo_dplyr.R"))
+
+#run exo_tydiverse
+source(here::here("exercices","exo_tidyverse.R"))
